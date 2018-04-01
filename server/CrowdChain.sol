@@ -234,6 +234,30 @@ contract CrowdChain {
         });
         return status;
     }
+
+    function findAgent()
+        view
+        public
+        onlyAgent
+        returns (Agent) {
+        return agents[msg.sender];
+    }
+
+    function findFunder()
+        view
+        public
+        onlyFunder
+        returns (Funder) {
+        return funders[msg.sender];
+    }
+
+    function findVerifier()
+        view
+        public
+        onlyVerifier
+        returns (Verifier) {
+        return verifiers[msg.sender];
+    }
 }
 /*
 format of the smart contract

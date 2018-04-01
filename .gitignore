@@ -1,2 +1,5 @@
 build/*
 node_modules
+abi_definition
+compiled_code
+bytecode

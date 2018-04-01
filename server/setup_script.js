@@ -5,11 +5,13 @@ const solc = require('solc');
 const web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 web3.eth.accounts
 
-const code = fs.readFileSync('new_crowdchain.sol').toString();
+const code = fs.readFileSync('CrowdChain.sol').toString();
 const compiledCode = solc.compile(code);
 console.log(compiledCode)
 const abiDefinition = JSON.parse(compiledCode.contracts[':CrowdChain'].interface)
+const byteCode = compiledCode.contracts[':CrowdChain'].bytecode
 fs.writeFileSync('abi_definition', JSON.stringify(abiDefinition));
+fs.writeFileSync('bytecode', JSON.stringify(byteCode));
 /*
 const CrowdChainContract = web3.eth.contract(abiDefinition);
 const byteCode = compiledCode.contracts[':CrowdChain'].bytecode;
