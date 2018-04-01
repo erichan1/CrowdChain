@@ -85,37 +85,44 @@
                 What Kind of Contributor Are You?
               </button>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="#hiddenPassForm" data-toggle="collapse">Agent</a>
-                <a class="dropdown-item" href="#hiddenFundForm" data-toggle="collapse">Funder</a>
-                <a class="dropdown-item" href="#hiddenPassForm" data-toggle="collapse">Verifier</a>
+                <a class="dropdown-item" href="#agentAdded" data-toggle="collapse">Agent</a>
+                <a class="dropdown-item" href="#fundAdded" data-toggle="collapse">Funder</a>
+                <a class="dropdown-item" href="#vAdded" data-toggle="collapse">Verifier</a>
                 <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#hiddenPassForm" data-toggle="collapse">Chairperson</a>
+                <a class="dropdown-item" href="#chairpersonAdded" data-toggle="collapse">Chairperson</a>
               </div>
             </div>
             <p></p>
-            <div id="hiddenPassForm" class="collapse">
+            <div id="agentAdded" class="collapse">
               <form>
                 <div class="form-group row">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">Password Submission</label>
-                  <input type="password" class="form-control" id="inputPassword" placeholder="something better than 12345">
-                  <p></p>
-                  <button type="submit" class="btn btn-primary">Submit Password</button>
+                  <label for="agentAdded" class="col-sm-4 col-form-label">Join This Cause As Agent?</label>
+                  <button type="submit" class="btn btn-primary" onclick="addAgent()">Agree To Join</button>
                 </div>
               </form>
             </div>
-            <div id="hiddenFundForm" class="collapse in">
+            <div id="fundAdded" class="collapse">
               <form>
                 <div class="form-group row">
-                  <label for="inputPassword" class="col-sm-2 col-form-label">Password Submission</label>
-                  <input type="password" class="form-control" id="inputPassword" placeholder="something better than 12345">
+                  <label for="fundsAdded" class="col-sm-4 col-form-label">Submit a Bounty to this Cause?</label>
+                  <input type="bounty" class="form-control" id="fundsAdded" placeholder="$10.00">
+                  <button type="submit" class="btn btn-primary" onclick="getFund()">Agree To Fund</button>
                 </div>
               </form>
+            </div>
+            <div id="vAdded" class="collapse">
               <form>
                 <div class="form-group row">
-                  <label for="inputBounty" class="col-sm-2 col-form-label">Bounty Submission</label>
-                  <input type="bounty" class="form-control" id="inputBounty" placeholder="$10.00">
-                  <button type="submit" class="btn btn-primary" onclick="getFund()">Submit Password and Bounty</button>
-                  <p id="pTextInput"></p>
+                  <label for="verifierAdded" class="col-sm-4 col-form-label">Join This Cause As Verifier?</label>
+                  <button type="submit" class="btn btn-primary" onclick="addVerifier()">Agree To Join</button>
+                </div>
+              </form>
+            </div>
+            <div id="chairpersonAdded" class="collapse">
+              <form>
+                <div class="form-group row">
+                  <label for="chairpersonAdded" class="col-sm-4 col-form-label">Join This Cause As Chairperson?</label>
+                  <button type="submit" class="btn btn-primary" onclick="addChairperson()">Agree To Join</button>
                 </div>
               </form>
             </div>

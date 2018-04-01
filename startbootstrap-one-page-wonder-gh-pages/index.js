@@ -27,8 +27,21 @@ window.addEventListener('load', function() {
   });
 });
 
+function addAgent(){
+    alert("An agent is added");
+}
+
+function addVerifier(){
+    fund = $("#fundsAdded").val();
+    alert("A verifier is added");
+}
+
+function addChairperson(){
+    alert("A chairperson is added");
+}
+
 function getFund(){
-    fund = $("#inputBounty").val();
+    fund = $("#fundsAdded").val();
     alert(fund);
 }
 
