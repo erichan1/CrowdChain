@@ -47,25 +47,40 @@
     <header class="masthead text-center text-white">
       <div class="masthead-content">
         <div class="container">
-          <h1 class="masthead-heading mb-0">Cooperating For a Better World</h1>
-          <div class="progress">
-            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="80"
-            aria-valuemin="0" aria-valuemax="100" style="width:80%">
-              80% Complete (success)
+          <h1 class="masthead-heading mb-5">Cooperating For a Better World</h1>
+          <br/>
+          <h2 class="mb-4"><small>Current Proposal: </small><span id="currProposal">Let's take the bus to create cleaner, clearer roads.</span></h2>
+          <ul class="nav nav-pills nav-fill mb-4">
+            <li class="nav-item">
+              <a>Sign ups <span class="badge badge-success" id="currNumJoined">592</span></a>
+            </li>
+            <li class="nav-item">
+              <a>Threshold <span class="badge badge-success" id="currNumThreshold">691</span></a>
+            </li>
+            <li class="nav-item">
+              <a>Bounty (wei) <span class="badge badge-success" id="currBounty">1000000000000</span></a>
+            </li>
+            <li class="nav-item">
+              <a>Proposal fulfilled <span class="badge badge-success" id="currIsFulfilled">False</span></a>
+            </li>
+            <li class="nav-item">
+              <a>Stake (wei) <span class="badge badge-success" id ="currStakeAmount">1000000000</span></a>
+            </li>
+          </ul>
+          <div class="progress" style="height: 40px;">
+            <div class="progress-bar progress-bar-success progress-bar-striped w-100" role="progressbar"
+            aria-valuemin="0" aria-valuemax="100" id="progressBar">
+              100% Complete
             </div>
           </div>
         </div>
       </div>
-      <div class="bg-circle-1 bg-circle"></div>
-      <div class="bg-circle-2 bg-circle"></div>
-      <div class="bg-circle-3 bg-circle"></div>
-      <div class="bg-circle-4 bg-circle"></div>
     </header>
 
     <section>
       <div class="container">
-        <div class="row">
-          <div class="col-md-7">
+        <div class="row mt-4 mb-4">
+          <div class="col-md-7 pr-5">
             <h1>
               Our Mission
             </h1>
@@ -78,16 +93,37 @@
             Scan your phone at QR codes available on buses and subways. This allows us to make sure that you're holding up your end of the deal. In return, we will make the cryptocurrency flow. Thanks again for participating, and we hope you join our movement.  
             </p>
           </div>
-          <div class="col-md-5">
-            <p></p>
-            <div class="btn-group">
-              <button class="btn btn-lg btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <div class="col-md-5 pl-5">
+            <ul class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-center" id="verified">
+                Agent commitment verified
+                <span class="badge badge-primary badge-pill">True</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center" id="paid">
+                Agent reward claimed
+                <span class="badge badge-primary badge-pill">False</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center" id="funding">
+                Provided funding
+                <span class="badge badge-primary badge-pill">10000000000</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center" id="isTrusted">
+                Trusted verifier
+                <span class="badge badge-primary badge-pill">True</span>
+              </li>
+              <li class="list-group-item d-flex justify-content-between align-items-center" id="isChairperson">
+                Chairperson
+                <span class="badge badge-primary badge-pill">False</span>
+              </li>
+            </ul>
+            <div class="btn-group mt-4">
+              <button class="btn btn-lg btn-info dropdown-toggle md-3" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 What Kind of Contributor Are You?
               </button>
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="#agentAdded" data-toggle="collapse">Agent</a>
                 <a class="dropdown-item" href="#fundAdded" data-toggle="collapse">Funder</a>
-                <a class="dropdown-item" href="#vAdded" data-toggle="collapse">Verifier</a>
+                <a class="dropdown-item" href="#verifierAdded" data-toggle="collapse">Verifier</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#chairpersonAdded" data-toggle="collapse">Chairperson</a>
               </div>
@@ -104,13 +140,17 @@
             <div id="fundAdded" class="collapse">
               <form>
                 <div class="form-group row">
-                  <label for="fundsAdded" class="col-sm-4 col-form-label">Submit a Bounty to this Cause?</label>
-                  <input type="bounty" class="form-control col-sm-3" id="fundsAdded" placeholder="$10.00">
-                  <button type="submit" class="btn btn-primary col-sm-3" onclick="getFund()">Agree To Fund</button>
+                  <label for="fundsAdded" class="col-form-label">Submit a Bounty to this Cause?</label>
+                  <br/><br/>
+                  Bounty (wei)
+                  <input type="text" class="form-control mb-3" id="fundsAdded" placeholder="10000000000">
+                  <br/>
+                  <br/>
+                  <button type="submit" class="btn btn-primary col-sm-4" onclick="addFunds()">Agree To Fund</button>
                 </div>
               </form>
             </div>
-            <div id="vAdded" class="collapse">
+            <div id="verifierAdded" class="collapse">
               <form>
                 <div class="form-group row">
                   <label for="verifierAdded" class="col-sm-4 col-form-label">Join This Cause As Verifier?</label>
@@ -121,8 +161,21 @@
             <div id="chairpersonAdded" class="collapse">
               <form>
                 <div class="form-group row">
-                  <label for="chairpersonAdded" class="col-sm-4 col-form-label">Join This Cause As Chairperson?</label>
-                  <button type="submit" class="btn btn-primary" onclick="addChairperson()">Agree To Join</button>
+                  <label for="chairpersonAdded" class="col-form-label">Create A New Proposal?</label><br/><br/>
+                  Proposal Name
+                  <input type="text" class="form-control mb-3" id="proposal" placeholder="Let's take public transit more often!">
+                  <br/>
+                  Number of participants required
+                  <input type="number" class="form-control mb-3" id="numThreshold" placeholder="800">
+                  <br/>
+                  Amount of stake required (wei)
+                  <input type="number" class="form-control mb-3" id="stakeAmount" placeholder="1000000000">
+                  <br/>
+                  Trusted verifiers (comma separated)
+                  <input type="text" class="form-control mb-3" id="verifiers" placeholder="0x1234, 0x5678">
+                  <br/>
+                  <br/>
+                  <button type="submit" class="btn btn-primary" onclick="addContract()">Agree To Join</button>
                 </div>
               </form>
             </div>

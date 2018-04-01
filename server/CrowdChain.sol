@@ -1,5 +1,4 @@
 pragma solidity ^0.4.18;
-pragma experimental ABIEncoderV2;
 
 contract CrowdChain {
 
@@ -15,14 +14,6 @@ contract CrowdChain {
     struct Verifier {
         bool isTrusted;
         bool initialized;
-    }
-    struct Status {
-        uint numJoined;
-        uint numThreshold;
-        uint bounty;
-        string proposal;
-        bool isFulfilled;
-        uint stakeAmount;
     }
 
     address public chairperson;
@@ -71,17 +62,14 @@ contract CrowdChain {
         uint _numThreshold,
         uint _stakeAmount, 
         address[] _verifiers
-    ) public payable {
+    ) public {
         chairperson = msg.sender;
         proposal = _proposal;
         numJoined = 0;
         numThreshold = _numThreshold;
         stakeAmount = _stakeAmount;
         isFulfilled = false;
-        bounty = msg.value;
-
-        emit FundingGiven(msg.sender, msg.value);
-        emit PaymentReceived(msg.sender, msg.value);
+        bounty = 0;
 
         // add trusted verifiers
         for (uint i = 0; i < _verifiers.length; i++) {
@@ -223,40 +211,42 @@ contract CrowdChain {
         return proposal;
     }
 
-    function statusUpdate() view public returns (Status) {
-        Status memory status = Status({
-            numJoined: numJoined,
-            numThreshold: numThreshold,
-            bounty: bounty,
-            proposal: proposal,
-            isFulfilled: isFulfilled,
-            stakeAmount: stakeAmount
-        });
-        return status;
+    function statusUpdate() view public 
+        returns (uint, uint, uint, string, bool, uint)
+    {
+        return (numJoined, numThreshold, bounty, proposal, isFulfilled,
+            stakeAmount);
     }
 
     function findAgent()
         view
         public
         onlyAgent
-        returns (Agent) {
-        return agents[msg.sender];
+        returns (bool, bool)
+    {
+        return (agents[msg.sender].verified, agents[msg.sender].paid);
     }
 
     function findFunder()
         view
         public
         onlyFunder
-        returns (Funder) {
-        return funders[msg.sender];
+        returns (uint)
+    {
+        return funders[msg.sender].funding;
     }
 
     function findVerifier()
         view
         public
         onlyVerifier
-        returns (Verifier) {
-        return verifiers[msg.sender];
+        returns (bool)
+    {
+        return verifiers[msg.sender].isTrusted;
+    }
+
+    function getChairperson() view public returns (address) {
+        return chairperson;
     }
 }
 /*
