@@ -11,7 +11,15 @@ window.addEventListener('load', function() {
   }
   CrowdChainContract = web3.eth.contract(abiDefinition);
   userAddress = web3.eth.accounts[0];
-
+  getAllContracts()
+  .then(contractAddresses => {
+    if (contractAddresses.length > 0) {
+      currentContractAddress = contractAddresses[contractAddresses.length - 1];
+      currentContractInstance = CrowdChainContract.at(currentContractAddress);
+      initializeListeners(currentContractInstance);
+    }
+    return Promise.resolve();
+  })
 });
 
 let currentContractAddress = null;
@@ -24,11 +32,88 @@ let CrowdChainContract = null;
 let userAddress = null;
 
 
+function getTransactionReceiptPromise(hash) {
+    return new Promise((resolve, reject) => {
+        web3.eth.getTransactionReceipt(hash, (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+
+}
+
+function getBlockPromise(index) {
+    return new Promise((resolve, reject) => {
+        web3.eth.getBlock(index, (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+}
+
+function getAllTransactionReceipts(index) {
+    return getBlockPromise(index)
+    .then(block => {
+        const trPromises = [];
+        for (let i = 0; i < block.transactions.length; i += 1) {
+            trPromises.push(getTransactionReceiptPromise(block.transactions[i]));
+        }
+        return Promise.all(trPromises);
+    })
+    .then(transactionReceipts => {
+        let contractAddresses = [];
+        for (let i = 0; i < transactionReceipts.length; i += 1) {
+            if (transactionReceipts[i].contractAddress !== null) {
+                contractAddresses.push(transactionReceipts[i].contractAddress);
+            }
+        }
+        return contractAddresses;
+    })
+    .catch(err => {
+        return Promise.reject(err);
+    })
+}
+
+function getAllContracts() {
+    console.log('getting all contracts');
+    return getBlockPromise('latest')
+    .then(latestBlock => {
+        const latestIndex = latestBlock.number;
+
+
+        const blocksPromises = [];
+        for (let i = 0; i <= latestIndex; i += 1) {
+            blocksPromises.push(getAllTransactionReceipts(i));
+        }
+
+        localStorage.setItem('latestIndex', JSON.stringify(latestIndex));
+        return Promise.all(blocksPromises);
+    })
+    .then(contractAddressLists => {
+        let contractAddresses = [];
+        for (let i = 0; i < contractAddressLists.length; i += 1) {
+            if (contractAddressLists[i].length > 0) {
+                contractAddresses.push(...contractAddressLists[i]);
+            }
+        }
+        console.log('got all contracts');
+        localStorage.setItem('contractAddreses', JSON.stringify(contractAddreses));
+
+        return contractAddresses;
+    })
+    .catch(err => {
+        return Promise.reject(err);
+    });
+}
+
 function checkForContracts(index='latest') {
     const block = web3.eth.getBlock(index);
     for (let i = 0; i < block.transactions.length; i += 1) {
         let transaction = web3.eth.getTransactionReceipt(block.transactions[i]);
-        console.log(transaction.contractAddress);
         if (transaction.contractAddress !== null) {
             return contractAddress;
         }
@@ -96,7 +181,6 @@ function initializeListeners(contractInstance) {
  * Each use case attaches to some of CDot's functions that interact with the blockchain. 
 */
 function addAgent(){
-
     promise(userAddress);
     console.log(userAddress);
 }
