@@ -319,8 +319,15 @@ function fund(userAddress, funding, gas=100000) {
   });
 }
 
-function promise(userAddress, gas=100000) {
-  const stakeAmount = currentContractInstance.stakeAmount.call();
+async function promise(userAddress, gas=100000) {
+  const stakeAmount = await new Promise((resolve, reject) => {
+    currentContractInstance.stakeAmount.call((err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(result);
+    });
+  });
   return new Promise((resolve, reject) => {
     currentContractInstance.promise({ from: userAddress, gas, value: stakeAmount },
       function(err, result) {
