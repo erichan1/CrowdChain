@@ -139,7 +139,7 @@ function getAllContracts() {
     const lastUpdatedIndex = JSON.parse(localStorage.getItem('latestIndex'));
     let lastContractAddresses = JSON.parse(localStorage.getItem('contractAddresses'));
 
-    if (lastContractAddresses.length > 0 && lastContractAddresses[0].length < 10) {
+    if (lastContractAddresses != null && lastContractAddresses.length > 0 && lastContractAddresses[0].length < 10) {
       lastContractAddresses = [];
     }
 
@@ -190,12 +190,12 @@ function checkForContracts(index='latest') {
 
 function createContract(chairperson, proposal, verifiers=[], 
   numThreshold=2, stakeAmount=1000000000, gas=4700000) {
-  const deployedContract = CrowdChainContract.new([
+  const deployedContract = CrowdChainContract.new(
     proposal,
     numThreshold,
     stakeAmount,
-    verifiers
-  ], {
+    verifiers,
+  {
     data: byteCode, from: chairperson, gas
   });
   contractInstance = CrowdChainContract.at(deployedContract.address)
@@ -359,12 +359,16 @@ function disburse(userAddress, gas=100000) {
   });
 }
 
-function getStatus() {
-  return currentContractInstance.statusUpdate.call();
-}
-
-function getProposal() {
-  return currentContractInstance.getProposal.call().toLocaleString();
+async function getStatus() {
+  const status = await new Promise((resolve, reject) => {
+    currentContractInstance.statusUpdate.call((err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(result);
+    });
+  });
+  return status;
 }
 
 function getAgent(userAddress, gas=100000) {
