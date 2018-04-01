@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>One Page Wonder - Start Bootstrap Template</title>
+    <title>CrowdChain - Making waves through people and blockchain</title>
 
     <!-- Bootstrap core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -27,7 +27,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">Start Bootstrap</a>
+        <a class="navbar-brand" href="#">CrowdChain</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -108,16 +108,14 @@
                 <div class="form-group row">
                   <label for="inputPassword" class="col-sm-2 col-form-label">Password Submission</label>
                   <input type="password" class="form-control" id="inputPassword" placeholder="something better than 12345">
-                  <p></p>
-                  <button type="submit" class="btn btn-primary">Submit Password</button>
                 </div>
               </form>
               <form>
                 <div class="form-group row">
                   <label for="inputBounty" class="col-sm-2 col-form-label">Bounty Submission</label>
                   <input type="bounty" class="form-control" id="inputBounty" placeholder="$10.00">
-                  <p></p>
-                  <button type="submit" class="btn btn-primary">Submit Bounty</button>
+                  <button type="submit" class="btn btn-primary" onclick="getFund()">Submit Password and Bounty</button>
+                  <p id="pTextInput"></p>
                 </div>
               </form>
             </div>
@@ -138,7 +136,7 @@
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
+    <script src="index.js"></script>
   </body>
 
 </html>
