@@ -37,7 +37,7 @@ let CrowdChainContract = null;
 let userAddress = null;
 
 async function refreshFields() {
-  const status = getStatus();
+  const status = await getStatus();
   const user = await getUser();
 
   $("#currNumJoined").html(status[0].toNumber());
@@ -51,8 +51,8 @@ async function refreshFields() {
   for (let i = 0; i <= 100; i += 1) {
     $("#progressBar").removeClass("w-" + i); 
   }currIsFulfilled
-  const progressAmount = Math.min(Math.round(status[0].toNumber() /
-    (status[1].toNumber() + 0.001)), 100);
+  const progressAmount = Math.min(Math.round(100 * (status[0].toNumber() /
+    (status[1].toNumber() + 0.001))), 100);
   $('#progressBar').addClass("w-"+ progressAmount);
   $('#progressBar').html(progressAmount + "% complete");
 
@@ -296,13 +296,24 @@ function addContract(){
 
 function addFunds(funding){
   const funds = parseInt($("#fundsAdded").val());
-  fund(userAddress, funds)
+  return fund(userAddress, funds)
   .then(() => {
     alert('Successfully added ' + funds + ' wei to the bounty.');
   })
   .catch(err => {
     console.log(err);
     alert('Unable to add funds at this time.');
+  })
+}
+
+function disburseFunds() {
+  return disburse(userAddress)
+  .then((result) => {
+    alert('Successfully claimed ' + result + ' wei as a reward for cooperating!');
+  })
+  .catch(err => {
+    console.log(err);
+    alert('Unable to disburse funds at this time.');
   })
 }
 

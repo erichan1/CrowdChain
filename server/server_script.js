@@ -39,11 +39,11 @@ let verifierAddress = null;
 
 setupContractInstance();
 
-app.get('/verify', (req, res) => {
+app.get('/verify/:id', (req, res) => {
   console.log(req.url, 'was requested');
-  verify(verifierAddress, req.body.verifiedAddress)
+  verify(verifierAddress, req.query.id)
   .then(result => {
-    res.send("Address " + req.body.verifiedAddress + " was verified.")
+    res.send("Address " + req.query.id + " was verified.")
   })
   .catch(err => {
     console.log(err);
