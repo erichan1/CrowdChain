@@ -40,10 +40,10 @@ let verifierAddress = null;
 setupContractInstance();
 
 app.get('/verify/:id', (req, res) => {
-  console.log(req.url, 'was requested', req.params, req.query.id);
-  verify(verifierAddress, req.params.id)
+  console.log(req.url, 'was requested');
+  verify(verifierAddress, req.query.id)
   .then(result => {
-    res.send("Address " + req.params.id + " was verified.")
+    res.send("Address " + req.query.id + " was verified.")
   })
   .catch(err => {
     console.log(err);
