@@ -97,7 +97,7 @@
               <form>
                 <div class="form-group row">
                   <label for="agentAdded" class="col-sm-4 col-form-label">Join This Cause As Agent?</label>
-                  <button type="submit" class="btn btn-primary" onclick="addAgent()">Agree To Join</button>
+                  <button type="button" class="btn btn-primary" onclick="addAgent()">Agree To Join</button>
                 </div>
               </form>
             </div>
@@ -105,8 +105,8 @@
               <form>
                 <div class="form-group row">
                   <label for="fundsAdded" class="col-sm-4 col-form-label">Submit a Bounty to this Cause?</label>
-                  <input type="bounty" class="form-control" id="fundsAdded" placeholder="$10.00">
-                  <button type="submit" class="btn btn-primary" onclick="getFund()">Agree To Fund</button>
+                  <input type="bounty" class="form-control col-sm-3" id="fundsAdded" placeholder="$10.00">
+                  <button type="submit" class="btn btn-primary col-sm-3" onclick="getFund()">Agree To Fund</button>
                 </div>
               </form>
             </div>
@@ -143,7 +143,8 @@
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="index.js"></script>
+    <script src="scripts/client_script.js"></script>
+    <script src="https://cdn.rawgit.com/ethereum/web3.js/develop/dist/web3.js"></script>
   </body>
 
 </html>
