@@ -1,23 +1,34 @@
 pragma solidity ^0.4.18;
+pragma experimental ABIEncoderV2;
 
 contract CrowdChain {
 
     struct Agent {
         bool verified;
         bool paid;
+        bool initialized;
     }
     struct Funder {
-        uint value;
+        uint funding;
+        bool initialized;
     }
     struct Verifier {
         bool isTrusted;
+        bool initialized;
+    }
+    struct Status {
+        uint numJoined;
+        uint numThreshold;
+        uint bounty;
+        string proposal;
+        bool isFulfilled;
+        uint stakeAmount;
     }
 
-    address chairperson;
-    mapping(address => Agent) agents;
-    mapping(address => Verifier) verifiers;
-    mapping(address => Funder) funders;
-
+    address public chairperson;
+    mapping(address => Agent) public agents;
+    mapping(address => Verifier) public verifiers;
+    mapping(address => Funder) public funders;
 
     //number of people that have joined this cause. 
     uint public numJoined;
@@ -26,7 +37,7 @@ contract CrowdChain {
     uint public numThreshold;
 
     //amount of money available to this crowdchain
-    uint32 public money;
+    uint public bounty;
 
     //the goal of this crowdchain. ex: Join us in solving LA traffic!
     string public proposal;
@@ -37,24 +48,46 @@ contract CrowdChain {
     // stake amount
     uint public stakeAmount;
 
+    // any payment received by the contract
+    event PaymentReceived(address addr, uint amount);
+
+    // any payment given by the contract
+    event PaymentGiven(address addr, uint amount);
+
+    // the promise threshold has been met and the proposal is fulfilled
+    event ProposalFulfilled();
+
+    // promise made
+    event PromiseMade(address addr);
+
+    // funding given by an funder
+    event FundingGiven(address addr, uint amount);
+
+    // an agent is verified by a verifier
+    event AgentVerified(address verifier, address verified);
+
     function CrowdChain(
         string _proposal,
         uint _numThreshold,
         uint _stakeAmount, 
-        address[] _verifiers,
+        address[] _verifiers
     ) public payable {
         chairperson = msg.sender;
         proposal = _proposal;
-        numJoined = 0
+        numJoined = 0;
         numThreshold = _numThreshold;
-        stakeAmount = _stakeAmount
+        stakeAmount = _stakeAmount;
         isFulfilled = false;
         bounty = msg.value;
+
+        emit FundingGiven(msg.sender, msg.value);
+        emit PaymentReceived(msg.sender, msg.value);
 
         // add trusted verifiers
         for (uint i = 0; i < _verifiers.length; i++) {
             Verifier storage verifier = verifiers[_verifiers[i]];
             verifier.isTrusted = true;
+            verifier.initialized = true;
         }
     }
 
@@ -64,17 +97,22 @@ contract CrowdChain {
     }
 
     modifier onlyVerifier() { 
-        require (puverifiers[msg.sender].isValue); 
+        require(verifiers[msg.sender].initialized); 
+        _;
+    }
+
+    modifier onlyFunder() { 
+        require(funders[msg.sender].initialized); 
         _;
     }
 
     modifier onlyAgent() {
-        require (agents[msg.sender].isValue);
+        require(agents[msg.sender].initialized);
         _;
     }
 
     modifier notAgent() {
-        require (!agents[msg.sender].isValue);
+        require(!agents[msg.sender].initialized);
         _;
     }
 
@@ -84,43 +122,67 @@ contract CrowdChain {
     }
 
     function fund() public payable fulfilledState(false) {
-        if (!funders[msg.sender].isValue) {
-            funders[msg.sender] = 0
+        Funder storage funder = funders[msg.sender];
+        if (!funders[msg.sender].initialized) {
+            funders[msg.sender].funding = 0;
+            funder.initialized = true;
         }
-        funders[msg.sender] += msg.value;
+        funders[msg.sender].funding += msg.value;
         bounty += msg.value;
+
+        emit FundingGiven(msg.sender, msg.value);
+        emit PaymentReceived(msg.sender, msg.value);
     }
 
     function refund() public onlyFunder fulfilledState(false) {
-        msg.sender.transfer(funders[msg.sender].value);
-        bounty -= funders[msg.sender].value;
+        msg.sender.transfer(funders[msg.sender].funding);
+
+        emit PaymentGiven(msg.sender, funders[msg.sender].funding);
+
+        bounty -= funders[msg.sender].funding;
         delete funders[msg.sender];
     }
 
     function promise() public payable notAgent fulfilledState(false) {
+        require(msg.value >= stakeAmount);
         Agent storage agent = agents[msg.sender];
         agent.verified = false;
         agent.paid = false;
+        agent.initialized = true;
         numJoined += 1;
 
         if (numJoined >= numThreshold) {
             setFulfilled(true);
         }
+
+        emit PaymentReceived(msg.sender, msg.value);
+        emit PromiseMade(msg.sender);
     }
 
-    function renege() public onlyAgent fulfilledState(false) {
+    function renege()
+        public
+        onlyAgent
+        fulfilledState(false)
+        returns (uint)
+    {
         msg.sender.transfer(stakeAmount);
         delete agents[msg.sender];
         numJoined -= 1;
+
+        emit PaymentGiven(msg.sender, stakeAmount);
+
+        return stakeAmount;
     }
 
     function verify(address _agentAddress)
         public
         onlyVerifier
-        fulfilledState(false)
+        fulfilledState(true)
     {
-        require(agents[_agentAddress].isValue);
+        require(agents[_agentAddress].initialized);
         agents[_agentAddress].verified = true;
+
+        emit AgentVerified(msg.sender, _agentAddress);
     }
 
     function setFulfilled (bool _isFulfilled) private {
@@ -128,28 +190,51 @@ contract CrowdChain {
     }
 
     function disburse()
+        public
         onlyAgent
         fulfilledState(true)
+        returns (uint)
     {
-        require(agents[msg.sender].isValue && !agents[msg.sender].paid);
-        msg.sender.transfer(bounty / numJoined)
+        require(agents[msg.sender].initialized && !agents[msg.sender].paid);
+        msg.sender.transfer(bounty / numJoined + stakeAmount);
         agents[msg.sender].paid = true;
+
+        emit PaymentGiven(msg.sender, (bounty / numJoined + stakeAmount));
+
+        return (bounty / numJoined + stakeAmount);
     }
 
-    function addVerifier(address _verifierAddress) onlyChairperson {
-        Verifier storage verifier = verifers[_verifiers[i]];
+    function addVerifier(address _verifierAddress) 
+        public
+        onlyChairperson 
+    {
+        Verifier storage verifier = verifiers[_verifierAddress];
         verifier.isTrusted = true;
+        verifier.initialized = true;
     }
 
-    function deleteVerifier(address _verifierAddress) onlyChairperson {
-        delete verifers[_verifiers[i]];
+    function deleteVerifier(address _verifierAddress) 
+        public onlyChairperson
+    {
+        delete verifiers[_verifierAddress];
     }
 
     function getProposal() view public returns (string) {
         return proposal;
     }
 
-
+    function statusUpdate() view public returns (Status) {
+        Status memory status = Status({
+            numJoined: numJoined,
+            numThreshold: numThreshold,
+            bounty: bounty,
+            proposal: proposal,
+            isFulfilled: isFulfilled,
+            stakeAmount: stakeAmount
+        });
+        return status;
+    }
+}
 /*
 format of the smart contract
 

@@ -1,0 +1,24 @@
+{
+  "name": "crowdchain",
+  "version": "1.0.0",
+  "description": "break prisoner dilemmas with the blockchain",
+  "main": "setup_script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erichan1/CrowdChain.git"
+  },
+  "author": "Alex Cui, Eric Han, Alycia Lee, Erich Liang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/erichan1/CrowdChain/issues"
+  },
+  "homepage": "https://github.com/erichan1/CrowdChain#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "solc": "^0.4.21",
+    "web3": "^0.20.2"
+  }
+}
