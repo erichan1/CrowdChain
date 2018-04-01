@@ -19,6 +19,7 @@ window.addEventListener('load', function() {
       initializeListeners(currentContractInstance);
 
       $(document).ready(function() {
+        new QRCode(document.getElementById("qrcode"), "https://crowdchain.verafy.me/verify/" + userAddress);
         refreshFields();
       });
     }
@@ -45,11 +46,11 @@ async function refreshFields() {
   if (status[3].length > 0) {
     $("#currProposal").html(status[3]);
   }
-  $("#currIsFulfilled").html(status[4]);
+  $("#currIsFulfilled").html(status[4] + "");
   $("#currStakeAmount").html(status[5].toNumber());
   for (let i = 0; i <= 100; i += 1) {
     $("#progressBar").removeClass("w-" + i); 
-  }
+  }currIsFulfilled
   const progressAmount = Math.min(Math.round(status[0].toNumber() /
     (status[1].toNumber() + 0.001)), 100);
   $('#progressBar').addClass("w-"+ progressAmount);
@@ -138,7 +139,7 @@ function getAllContracts() {
     const lastUpdatedIndex = JSON.parse(localStorage.getItem('latestIndex'));
     let lastContractAddresses = JSON.parse(localStorage.getItem('contractAddresses'));
 
-    if (lastContractAddresses.length > 0 && lastContractAddresses[0].length < 10) {
+    if (lastContractAddresses != null && lastContractAddresses.length > 0 && lastContractAddresses[0].length < 10) {
       lastContractAddresses = [];
     }
 
@@ -189,12 +190,12 @@ function checkForContracts(index='latest') {
 
 function createContract(chairperson, proposal, verifiers=[], 
   numThreshold=2, stakeAmount=1000000000, gas=4700000) {
-  const deployedContract = CrowdChainContract.new([
+  const deployedContract = CrowdChainContract.new(
     proposal,
     numThreshold,
     stakeAmount,
-    verifiers
-  ], {
+    verifiers,
+  {
     data: byteCode, from: chairperson, gas
   });
   contractInstance = CrowdChainContract.at(deployedContract.address)
@@ -318,8 +319,15 @@ function fund(userAddress, funding, gas=100000) {
   });
 }
 
-function promise(userAddress, gas=100000) {
-  const stakeAmount = currentContractInstance.stakeAmount.call();
+async function promise(userAddress, gas=100000) {
+  const stakeAmount = await new Promise((resolve, reject) => {
+    currentContractInstance.stakeAmount.call((err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(result);
+    });
+  });
   return new Promise((resolve, reject) => {
     currentContractInstance.promise({ from: userAddress, gas, value: stakeAmount },
       function(err, result) {
@@ -358,12 +366,16 @@ function disburse(userAddress, gas=100000) {
   });
 }
 
-function getStatus() {
-  return currentContractInstance.statusUpdate.call();
-}
-
-function getProposal() {
-  return currentContractInstance.getProposal.call().toLocaleString();
+async function getStatus() {
+  const status = await new Promise((resolve, reject) => {
+    currentContractInstance.statusUpdate.call((err, result) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(result);
+    });
+  });
+  return status;
 }
 
 function getAgent(userAddress, gas=100000) {
