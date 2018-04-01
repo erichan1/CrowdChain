@@ -36,6 +36,17 @@ app.use('/', (req, res) => {
 });
 
 
+function checkForContracts(index='latest') {
+    const block = web3.eth.getBlock(index);
+    for (let i = 0; i < block.transactions.length; i += 1) {
+        let transaction = web3.eth.getTransactionReceipt(block.transactions[i]);
+        console.log(transaction.contractAddress);
+        if (transaction.contractAddress !== null) {
+            return contractAddress;
+        }
+    }
+}
+
 function createContract(chairperson, proposal, numThreshold=2, stakeAmount=1,
     verifiers=[], gas=4700000) {
     const deployedContract = CrowdChainContract.new([
