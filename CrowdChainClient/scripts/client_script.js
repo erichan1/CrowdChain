@@ -343,7 +343,6 @@ function verify(userAddress, verifiedAddress, gas=100000) {
       return resolve(result);
     });
   });
-
 }
 
 function disburse(userAddress, gas=100000) {
