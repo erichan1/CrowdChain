@@ -126,8 +126,6 @@
               <div class="dropdown-menu">
                 <a class="dropdown-item" href="#agentAdded" data-toggle="collapse">Agent</a>
                 <a class="dropdown-item" href="#fundAdded" data-toggle="collapse">Funder</a>
-                <a class="dropdown-item" href="#verifierAdded" data-toggle="collapse">Verifier</a>
-                <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#chairpersonAdded" data-toggle="collapse">Chairperson</a>
               </div>
             </div>
@@ -136,7 +134,7 @@
               <form>
                 <div class="form-group row">
                   <label for="agentAdded" class="col-sm-4 col-form-label">Join This Cause As Agent?</label>
-                  <button type="button" class="btn btn-primary" onclick="addAgent()">Agree To Join</button>
+                  <button type="button" href="#agentAdded" data-toggle="collapse" class="btn btn-primary" onclick="displayMsg('Thanks for joining us as an agent!', 'agentAdded');addAgent();">Agree To Join</button>
                 </div>
               </form>
               <form>
@@ -149,13 +147,13 @@
             <div id="fundAdded" class="collapse">
               <form>
                 <div class="form-group row">
-                  <label for="fundsAdded" class="col-form-label">Submit a Bounty to this Cause?</label>
-                  <br/><br/>
-                  Bounty (wei)
+                  <label for="fundsAdded" class="col-form-label"><h5>Submit Bounty to this Cause?</h5></label>
+                  <input style="height:0;width:1;padding:0;border:none" type="none" />
+                  Bounty(wei)
                   <input type="text" class="form-control mb-3" id="fundsAdded" placeholder="10000000000">
                   <br/>
                   <br/>
-                  <button type="submit" class="btn btn-primary col-sm-4" onclick="addFunds()">Agree To Fund</button>
+                  <button type="button" href="#fundAdded" data-toggle="collapse" class="btn btn-primary col-sm-4" onclick="displayMsg('Thanks for helping us fund this project!', 'fundAdded'); addFunds();">Agree To Fund</button>
                 </div>
               </form>
             </div>
@@ -163,14 +161,15 @@
               <form>
                 <div class="form-group row">
                   <label for="verifierAdded" class="col-sm-4 col-form-label">Join This Cause As Verifier?</label>
-                  <button type="submit" class="btn btn-primary" onclick="addVerifier()">Agree To Join</button>
+                  <button type="button" href="#verifierAdded" data-toggle="collapse" class="btn btn-primary" onclick="displayMsg('Thanks for joining us as a verifier!', 'verifierAdded'); addVerifier();">Agree To Join</button>
                 </div>
               </form>
             </div>
             <div id="chairpersonAdded" class="collapse">
               <form>
                 <div class="form-group row">
-                  <label for="chairpersonAdded" class="col-form-label">Create A New Proposal?</label><br/><br/>
+                  <label for="chairpersonAdd" class="col-form-label"><h5>Create A New Proposal?</h5></label>
+                  <input style="height:0;width:1;padding:0;border:none" type="none" />
                   Proposal Name
                   <input type="text" class="form-control mb-3" id="proposal" placeholder="Let's take public transit more often!">
                   <br/>
@@ -184,10 +183,11 @@
                   <input type="text" class="form-control mb-3" id="verifiers" placeholder="0x1234, 0x5678">
                   <br/>
                   <br/>
-                  <button type="submit" class="btn btn-primary" onclick="addContract()">Agree To Join</button>
+                  <button type="button" href="#chairpersonAdded" data-toggle="collapse" class="btn btn-primary" onclick="displayMsg('Thanks for joining us as a chairperson!', 'chairpersonAdded'); addContract();">Agree To Join</button>
                 </div>
               </form>
             </div>
+            <div id="displayMsg"></div>
           </div>
           <div id="qrcode" class="mt-2 mb-4 mr-4 pr-3 pl-3"/>
         </div>
