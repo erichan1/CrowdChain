@@ -19,6 +19,78 @@ let currentContractAddress = null;
 let currentContractInstance = null;
 let currentListenerList = [];
 
+function getTransactionReceiptPromise(hash) {
+    return new Promise((resolve, reject) => {
+        web3.eth.getTransactionReceipt(hash, (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+
+}
+
+function getBlockPromise(index) {
+    return new Promise((resolve, reject) => {
+        web3.eth.getBlock(index, (err, result) => {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(result);
+        });
+    });
+}
+
+function getAllTransactionReceipts(index) {
+    return getBlockPromise(index)
+    .then(block => {
+        const trPromises = [];
+        for (let i = 0; i < block.transactions.length; i += 1) {
+            trPromises.push(getTransactionReceiptPromise(block.transactions[i]));
+        }
+        return Promise.all(trPromises);
+    })
+    .then(transactionReceipts => {
+        let contractAddresses = [];
+        for (let i = 0; i < transactionReceipts.length; i += 1) {
+            for (let j = 0; j < transactionReceipts[i].length; j += 1) {
+                if (transactionReceipts[i][j].contractAddress !== null) {
+                    contractAddresses.push(transactionReceipts[i][j].contractAddress);
+                }
+            }
+        }
+        return contractAddresses;
+    })
+    .catch(err => {
+        return Promise.reject(err);
+    })
+}
+
+function getAllContracts() {
+    console.log('getting all contracts');
+    return getBlockPromise('latest')
+    .then(latestBlock => {
+        let latestIndex = latestBlock.blockNumber;
+        let blocksPromises = [];
+        for (let i = 0; i <= latestIndex; i += 1) {
+            blocksPromises.push(getAllTransactionReceipts(i));
+        }
+        return Promise.all(blocksPromises);
+    })
+    .then(contractAddressLists => {
+        let contractAddresses = [];
+        for (let i = 0; i <= contractAddressLists.length; i += 1) {
+            contractAddresses.push(...contractAddressLists[i]);
+        }
+        console.log('got all contracts');
+        return contractAddresses;
+    })
+    .catch(err => {
+        return Promise.reject(err);
+    });
+}
+
 function checkForContracts(index='latest') {
     const block = web3.eth.getBlock(index);
     for (let i = 0; i < block.transactions.length; i += 1) {
