@@ -19,6 +19,7 @@ window.addEventListener('load', function() {
       initializeListeners(currentContractInstance);
 
       $(document).ready(function() {
+        new QRCode(document.getElementById("qrcode"), "https://crowdchain.verafy.me/verify/" + userAddress);
         refreshFields();
       });
     }
@@ -45,11 +46,11 @@ async function refreshFields() {
   if (status[3].length > 0) {
     $("#currProposal").html(status[3]);
   }
-  $("#currIsFulfilled").html(status[4]);
+  $("#currIsFulfilled").html(status[4] + "");
   $("#currStakeAmount").html(status[5].toNumber());
   for (let i = 0; i <= 100; i += 1) {
     $("#progressBar").removeClass("w-" + i); 
-  }
+  }currIsFulfilled
   const progressAmount = Math.min(Math.round(status[0].toNumber() /
     (status[1].toNumber() + 0.001)), 100);
   $('#progressBar').addClass("w-"+ progressAmount);

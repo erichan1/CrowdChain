@@ -22,12 +22,12 @@ let currentListenerList = [];
 
 function createContract(chairperson, proposal, verifiers=[], 
   numThreshold=2, stakeAmount=1000000000, gas=4700000) {
-  const deployedContract = CrowdChainContract.new([
+  const deployedContract = CrowdChainContract.new(
     proposal,
     numThreshold,
     stakeAmount,
     verifiers
-  ], {
+  , {
     data: byteCode, from: chairperson, gas
   });
   contractInstance = CrowdChainContract.at(deployedContract.address)
@@ -38,5 +38,5 @@ function createContract(chairperson, proposal, verifiers=[],
 }
 
 const address = createContract(web3.eth.accounts[0], "Let's go green!",
-  [web3.eth.accounts[1]])
+  [web3.eth.accounts[1], web3.eth.accounts[0]])
 console.log(address);

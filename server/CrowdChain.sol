@@ -175,6 +175,7 @@ contract CrowdChain {
 
     function setFulfilled (bool _isFulfilled) private {
         isFulfilled = _isFulfilled;
+        emit ProposalFulfilled();
     }
 
     function disburse()
