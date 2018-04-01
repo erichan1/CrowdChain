@@ -37,7 +37,7 @@ let CrowdChainContract = null;
 let userAddress = null;
 
 async function refreshFields() {
-  const status = getStatus();
+  const status = await getStatus();
   const user = await getUser();
 
   $("#currNumJoined").html(status[0].toNumber());
