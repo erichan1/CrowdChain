@@ -127,13 +127,13 @@ contract CrowdChain {
         isFulfilled = _isFulfilled;
     }
 
-    function disburse(address _agentAddress)
-        private
+    function disburse()
+        onlyAgent
         fulfilledState(true)
     {
-        require(agents[_agentAddress].isValue && !agents[_agentAddress].paid);
-        agents[_agentAddress].transfer(bounty / numJoined)
-        agents[_agentAddress].paid = true;
+        require(agents[msg.sender].isValue && !agents[msg.sender].paid);
+        msg.sender.transfer(bounty / numJoined)
+        agents[msg.sender].paid = true;
     }
 
     function addVerifier(address _verifierAddress) onlyChairperson {
