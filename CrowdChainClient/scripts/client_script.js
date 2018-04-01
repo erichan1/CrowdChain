@@ -456,5 +456,16 @@ function getUserAddress(index) {
   return web3.eth.accounts[index];
 }
 
+function displayMsg(msg, form) {
+  console.log('kekekek');
+  $('#displayMsg').html("<div class='alert alert-success'>");
+  $('#displayMsg > .alert-success').html("<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;")
+    .append("</button>");
+  $('#displayMsg > .alert-success')
+    .append(msg);
+  $('#displayMsg > .alert-success')
+    .append('</div>');
+}
+
 
 
