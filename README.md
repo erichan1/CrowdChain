@@ -1,122 +1,28 @@
+# Crowdchain leverages blockchain to create distributed, enforceable contracts, making impactful changes occur.
+
+https://crowdchain.verafy.me/
+
+## Inspiration
+
+Road traffic is a huge problem in LA and cities all across the world. It decreases productivity and steals otherwise fun or useful time. Although there are ways to solve this issue, such as having more people utilize buses and public transportation, these methods are not effective unless a large portion of society switches to these alternative modes of transportation all at once. We aim to solve this problem through the use of Crowdchain, which leverages the power of blockchain to create distributed, enforceable contracts and the ability of large groups of people to make change happen.
+
+## What it does
+ 
+The way Crowdchain functions is that once users sign up, there is no immediate commitment to change their daily commuting habits. However, when a certain percentage of LA residents, say 80%, decide to sign up behind the initiative to switch to public transportation, our smart contract kicks in. Users who have previously joined the initiative and actually switch to using buses and subways for transportation will receive an award for participating in the huge shift to public transportation. This is implemented through a mobile app that allows users to scan QR codes available on participating buses and subways, which in turn interacts with our blockchain which handles the verification and payment process, thus incentivizing users to switch to public transportation as a large group for bigger, better impact.
 
 
-# Welcome to the LA Hacks 2018 Blockchain Challenge by Nanome Inc.
+## How we built it
 
+First, we worked on creating a Blockchain backend for the project, looking into options such as creating our own virtual currency, different types of servers and networks we could run our blockchain on, etc. We decided to go with ganache-cli as a test network for our currency, due to its highly controllable nature and convenience. Afterwards, we looked at technologies such as Web3 and Metamask to link our blockchain backend to users. These technologies proved to be particularly effective, as we were able to create a visually appealing website and allow users to access the cryptocurrency with convenience right in their web browser. To help notify users of when monetary rewards will be handed out (i.e., when the 80% mark has been reached), we utilized Twilio API to help spread the word, giving all participants an accessible heads up about the impending changes. Finally, we created an Android app with the capability of scanning QR codes, and we integrated this with our ethereum dapp in order to create a comprehensive system that incentivizes users to take action behind initiatives as a group for larger effect and impact.
 
-![logo](https://github.com/matryx/LA-hacks-2018-nanome-blockchain-challenge/blob/master/assets/Nanome_Logo_Color.jpg)
+## Challenges we ran into
+We ran into several challenges over the course of the hackathon. One of our biggest challenges was integrating the blockchain backend with our website and MetaMask, a smart ethereum wallet. Also, we ran into a few problems setting up the Arduino 101 and being able to control the LED lights connected to the board. 
 
-In today’s emerging blockchain ecosystem, the concept of “Digital Assets” became immediately available with the expansion of the tokenization movement and smart contract frameworks. Decentralized Applications (DAPPS) are going to be a staple in the next generation internet stack (Web3.0 et. al) and will require decentralized versions of existing architecture for our current internet.
+## Accomplishments that we're proud of
+We are proud of the capabilities of Crowdchain, specifically in solving real world problems with collaboration. Further, we are proud that of overcoming obstacles, such as the integration of Blockchain and smart contracts with our frontend website, to create a polished final product that has stayed true to our original vision. 
 
-For this Hackathon, Nanome Inc challenges you to build your own Shopping DAPP WebApp on the Ethereum Virtual Network using Solidity. We will give you a basic Smart Contract of a “Digital Asset” to start out, along with some easy deployment instructions. We want you to build a new Smart Contract to handle the purchase of these Digital Assets as well as a Web UI for the shopping experience.
-
-This challenge allows for your team to be tested in your ability to:
-Quickly build front-end interfaces for a great user experience
-Build and deploy smart contracts to the Ethereum Network
-Work together in a variety of roles to deliver a project in a cutting-edge technology
-
-Submissions will be judged on the following:
-Overall awesomeness and functionality
-Smart Contract efficiency and performance metrics (ie: gas estimation)
-Smart Contract security practices (ie: can we hack it?)
-How decentralized your application is
-Additional points for creative, artistic, scientific, or hilarious entries
-
-Winning team will receive 1,000 MATRYX Tokens, media posts by Matryx and Nanome recognizing your achievement, and mentions to our 15,000+ telegram community members.
-
-## Key technologies and hints:
-* Ethereum Solidity
-* Web3
-* My Ether Wallet (ERC20 Token Wallet)
-* Metamask
-* Truffle
-* Ganache-cli / TestRPC
-* Lots of Javascript
-
-## There should be 3 main portions to your app.
-Frontend: An interface such as a WebUI that has a shopping cart like functionality where the items in the shop are the smart contracts of digital assets
-ShoppingController SmartContract: Smart Contract(s) that holds the blockchain logic and tracks addresses of the Digital Assets
-Digital Asset Smart Contracts: These are the items “for sale” which are Digital Assets. Each one has it’s own smart contract and an owner. There should be a lot of these. Feel free to change what code we gave you
-
-We will post a medium article with a link to our GitHub repo where we will host the basic Digital Asset Smart Contracts as well as some additional instructions for getting started.
-
-Best regards,
-The Matryx Team
-Nanome Inc.
-http://www.nanome.ai/ 
-
-
-## Project Usage
-
-If using truffle then use the following:
-
-```
-truffle develop
-```
-
-```
-migrate
-```
-
-```
-web3.eth.defaultAccount = web3.personal.listAccounts[0]
-```
-
-Attach to the contract instance
-```
-assetFactory = web3.eth.contract(AssetFactory.abi).at(AssetFactory.address)
-marketPlace = web3.eth.contract(Marketplace.abi).at(Marketplace.address)
-```
-
-To see what functions are available, type the name of the contract instance and add a `.` to the end + hit tab tab to view them
-
-ie:
-
-```marketplace.``` and hit tab tab results in:
-
-| marketPlace.__defineGetter__ | marketPlace.__defineSetter__     | marketPlace.__lookupGetter__    | marketPlace.__lookupSetter__   |
-|------------------------------|----------------------------------|---------------------------------|--------------------------------|
-| marketPlace.__proto__        | marketPlace.constructor          |                                 |                                |
-|                              |                                  |                                 |                                |
-| marketPlace.hasOwnProperty   | marketPlace.propertyIsEnumerable | marketPlace.isPrototypeOf       | marketPlace.toLocaleString     |
-| marketPlace.toString         | marketPlace.valueOf              |                                 |                                |
-|                              |                                  |                                 |                                |
-| marketPlace.AssetCreated     | marketPlace.AssetLeased          | marketPlace.AssetSold           | marketPlace._eth               |
-| marketPlace.address          | marketPlace.allEvents            | marketPlace.assetFactoryAddress | marketPlace.createDigitalAsset |
-| marketPlace.digitalAssets    | marketPlace.getOwner             | marketPlace.isOwner             | marketPlace.owner              |
-| marketPlace.transactionHash  | marketPlace.transferOwnership    |                                 |                                |
-|                              |                                  |                                 |                                |
-
-To Create a Digital Asset:
-
-```
-truffle(develop)> assetFactory.createAsset("Digital Asset Name","Description","Serial Number", {gas: 3000000})
-```
-
-This should respond with a transaction hash showing that the assetFactory created a digital asset. In your Marketplace contract (and any other contracts that calls assetFactory.createAsset),
-you will be returned the address of the newly-created Digital Asset. You can preview this functionality by making the following call from your truffle develop console:
-
-```
-truffle(develop)> assetFactory.createAsset.call("Digital Asset Name","Description","Serial Number", {gas: 3000000})
-'0xaa8f61728cb614f37a2fdb8b420c3c33134c7f69'
-```
-
-While this address does not actually contain any DigitalAsset code, once you have a datastructure in place in your Marketplace contract, you will be able to attach to a Digital Asset with the following command:
-
-```
-truffle(develop)> digitalAsset = web3.eth.contract(DigitalAsset.abi).at(<YourDigitalAssetAddress>)
-```
-
-
-Now that you are attached, you can call the setters or get the data from it!
-
-```
-truffle(develop)> digitalAsset.owner()
-'0x627306090abab3a6e1400e9345bc60c78a8bef57'
-```
-
-Remember: events are your friend in the land of Web UI! Do remember to balance your work on the smart contracts with a workable UI. Bonus points will be awarded if you use autoencoders to do similarity detection between assets somewhere in your project :)
-
-Good luck!
-If you have any questions, hit us up on the slack channel for LA hacks under 'nanome-challenge'
-
-@NanomeSam + @NanomeMax
+## What we learned
+Through building our project, we’ve learned more about the innerworkings of blockchain and ethereum, specifically how smart contracts play a role in transactions. We’ve also learned more about frontend (web dev), and about hardware (arduino). 
+ 
+## What's next
+Crowdchain could be applied to many other social dilemmas faced in society, such as in climate change, since all countries would benefit from stable climate, but are many are unwilling or unable to reduce CO2 emissions. Additionally, Crowdchain could be used to solve overfishing, specifically to promote fishing in non-sensitive places. Other uses include decentralized crowdfunding, meetups and events, social media petitions and callouts, and much more.
